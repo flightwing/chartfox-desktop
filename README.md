@@ -39,7 +39,6 @@ You can download the latest version for **Windows**, **macOS**, and **Linux** fr
 
 *   **🌍 Massive Coverage:** Access to more than **39,000 airports** and over **66,000 charts**.
 *   **✈️ VATSIM Ready:** For flights currently on the VATSIM network, ChartFox provides charts for both departure and arrival airports in **82%** of cases.
-*   **📍 Geo-Referencing:** View your real-time position directly on supported charts.
 *   **🤝 Community Driven:** Not-for-profit and maintained by volunteer developers.
 
 ---
