@@ -20,8 +20,7 @@
     },
     "linux": {
       "target": [
-        "AppImage",
-        "snap"
+        "AppImage"
       ],
       "category": "Utility"
     },
