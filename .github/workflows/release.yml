@@ -32,4 +32,4 @@ jobs:
       - name: Run build
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
-        run: npm run dist
+        run: npm run dist -- --publish always
