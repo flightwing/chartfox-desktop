@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require("electron");
+const { app, BrowserWindow, Menu, shell, dialog } = require("electron");
 const { autoUpdater } = require("electron-updater");
 const path = require("path");
 
@@ -22,7 +22,44 @@ function createWindow() {
   mainWindow.loadURL("https://chartfox.org/");
 }
 
+function createMenu() {
+  const template = [
+    { role: 'fileMenu' },
+    { role: 'editMenu' },
+    { role: 'viewMenu' },
+    { role: 'windowMenu' },
+    {
+      role: 'help',
+      submenu: [
+        {
+          label: 'Report a bug',
+          click: async () => {
+            await shell.openExternal('https://github.com/flightwing/chartfox-desktop/issues');
+          }
+        },
+        {
+          label: 'About ChartFox Desktop',
+          click: () => {
+            dialog.showMessageBox(mainWindow, {
+              type: 'info',
+              title: 'About ChartFox Desktop',
+              message: 'ChartFox Desktop v0.1.0',
+              detail: 'A lightweight, standalone desktop client for ChartFox – the free aeronautical chart aggregator for flight simulation.\n\nNot affiliated with ChartFox or Cobalt Grid.\n\nDeveloped by flightwing.',
+              buttons: ['OK'],
+              icon: path.join(__dirname, "logo.png")
+            });
+          }
+        }
+      ]
+    }
+  ];
+
+  const menu = Menu.buildFromTemplate(template);
+  Menu.setApplicationMenu(menu);
+}
+
 app.on("ready", () => {
+  createMenu();
   createWindow();
 
   autoUpdater.checkForUpdatesAndNotify();
