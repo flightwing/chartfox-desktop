@@ -25,7 +25,6 @@ This project creates a focused, distraction-free "Electronic Flight Bag" (EFB) e
 *   **🖥️ Dedicated Window:** Keep your charts separate from your YouTube videos and Wiki pages.
 *   **🌐 Multi-Platform:** Available for Windows, macOS, and Linux.   
 
----
 
 ## 📥 Download
 
@@ -33,7 +32,10 @@ You can download the latest version for **Windows**, **macOS**, and **Linux** fr
 
 [**👉 Download Latest Relase**](https://github.com/flightwing/chartfox-desktop/releases/latest)
 
----
+## 📖 The Story
+
+While using the excellent ChartFox application, I found it inconvenient to access charts in a web browser. I missed having a dedicated desktop app to quickly switch to during flights, instead of searching through a browser with multiple tabs like SimBrief open. Another small hurdle for newcomers is the need to install a Chrome extension for the best experience. I decided to change this and created this desktop application for myself and the community.
+
 
 ## ℹ️ What is ChartFox?
 
@@ -57,7 +59,21 @@ This application is an open-source project developed by the community. **It is N
 
 All rights to the ChartFox name, logo, and underlying service belong to their respective owners. This desktop application is simply a web-wrapper utility.
 
----
+
+## 🐛 Report a Bug
+
+If you encounter any issues **specific to this desktop application** (e.g., installation problems, window resizing issues, app crashes), please report them on our [GitHub Issues page](https://github.com/flightwing/chartfox-desktop/issues).
+
+**Please note:** If you find missing charts, incorrect data, or issues with the chart rendering itself, these are likely issues with the [ChartFox service](https://chartfox.org/) and should be reported to the ChartFox team directly, not here.
+
+## 🤝 Contributing
+
+Contributions are welcome! If you have ideas for improvements or new features for the desktop wrapper, feel free to open a pull request or start a discussion.
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
 
 ## 🧑‍💻 Development
 
