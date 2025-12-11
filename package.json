@@ -4,6 +4,10 @@
   "author": {
     "name": "flightwing"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/flightwing/chartfox-desktop.git"
+  },
   "version": "0.1.0",
   "main": "main.js",
   "build": {
