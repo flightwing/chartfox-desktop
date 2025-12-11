@@ -8,12 +8,16 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     width: 900,
     height: 700,
+    show: false,
     icon: path.join(__dirname, "logo.png"),
     webPreferences: {
       preload: __dirname + "/preload.js",
       webSecurity: false // Disables CORS restrictions, similar to the extension's rule.json
     }
   });
+
+  mainWindow.maximize();
+  mainWindow.show();
 
   mainWindow.loadURL("https://chartfox.org/");
 }
