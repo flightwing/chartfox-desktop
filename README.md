@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="logo.png" alt="ChartFox Desktop Logo" width="128" height="128">
+</p>
+
 # ✈️ ChartFox Desktop 
 
 > **A lightweight, standalone desktop client for [ChartFox](https://chartfox.org/) – the free aeronautical chart aggregator for flight simulation.**

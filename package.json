@@ -16,13 +16,15 @@
       ]
     },
     "win": {
-      "target": "nsis"
+      "target": "nsis",
+      "icon": "logo.png"
     },
     "linux": {
       "target": [
         "AppImage"
       ],
-      "category": "Utility"
+      "category": "Utility",
+      "icon": "logo.png"
     },
     "publish": [
       {
