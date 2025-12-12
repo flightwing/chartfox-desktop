@@ -13,29 +13,64 @@ function createWindow() {
     icon: path.join(__dirname, "logo.png"),
     webPreferences: {
       preload: __dirname + "/preload.js",
-      webSecurity: true, // Re-enable webSecurity for Cloudflare Turnstile
-      sandbox: false // Disable renderer sandbox to allow Turnstile iframe permissions
+      webSecurity: true,
+      sandbox: false
     }
   });
 
   // Intercept headers to bypass CORS for charts while keeping webSecurity enabled
   session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
-    // Don't modify headers for Cloudflare or VATSIM auth domains
     const url = details.url;
-    if (url.includes('cloudflare.com') || url.includes('vatsim.net')) {
-      callback({ responseHeaders: details.responseHeaders });
-      return;
-    }
-
     const responseHeaders = { ...details.responseHeaders };
 
-    // Replace CORS headers for other requests (charts)
-    responseHeaders['Access-Control-Allow-Origin'] = ['*'];
+    // Add CORS headers to all resources (except Cloudflare auth pages)
+    if (!url.includes('challenges.cloudflare.com')) {
+      // Clear any existing CORS headers to avoid conflicts
+      Object.keys(responseHeaders).forEach(key => {
+        if (key.toLowerCase().startsWith('access-control')) {
+          delete responseHeaders[key];
+        }
+      });
+      
+      // Set CORS headers to allow requests from chartfox origin
+      responseHeaders['access-control-allow-origin'] = ['https://chartfox.org'];
+      responseHeaders['access-control-allow-credentials'] = ['true'];
+      responseHeaders['access-control-allow-methods'] = ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'HEAD'];
+      responseHeaders['access-control-allow-headers'] = ['Content-Type', 'Authorization', 'X-XSRF-Token', 'X-Requested-With'];
+      responseHeaders['access-control-expose-headers'] = ['Content-Length', 'Content-Type'];
+      responseHeaders['access-control-max-age'] = ['86400'];
+    }
 
     callback({ responseHeaders });
   });
+  
+  // Intercept requests to add necessary headers for Cloudflare
+  session.defaultSession.webRequest.onBeforeSendHeaders((details, callback) => {
+    let requestHeaders = { ...details.requestHeaders };
+    
+    // Ensure proper headers for Cloudflare challenge
+    requestHeaders['User-Agent'] = userAgent;
+    requestHeaders['Accept-Language'] = 'en-US,en;q=0.9';
+    requestHeaders['Accept'] = 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8';
+    requestHeaders['Accept-Encoding'] = 'gzip, deflate, br';
+    requestHeaders['Cache-Control'] = 'max-age=0';
+    requestHeaders['Sec-Fetch-Dest'] = 'document';
+    requestHeaders['Sec-Fetch-Mode'] = 'navigate';
+    requestHeaders['Sec-Fetch-Site'] = 'none';
+    requestHeaders['Upgrade-Insecure-Requests'] = '1';
+    
+    callback({ requestHeaders });
+  });
 
   mainWindow.webContents.userAgent = userAgent;
+
+  // Enable persistent cookies for Cloudflare challenge
+  session.defaultSession.cookies.on('changed', () => {
+    // Cookies will be automatically persisted
+  });
+
+  // Disable cache to ensure fresh Cloudflare challenges are fetched
+  mainWindow.webContents.session.clearCache();
 
   mainWindow.maximize();
   mainWindow.show();
