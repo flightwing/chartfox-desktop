@@ -1,4 +1,4 @@
-const { app, BrowserWindow, Menu, shell, dialog } = require("electron");
+const { app, BrowserWindow, Menu, shell, dialog, session } = require("electron");
 const { autoUpdater } = require("electron-updater");
 const path = require("path");
 
@@ -13,9 +13,21 @@ function createWindow() {
     icon: path.join(__dirname, "logo.png"),
     webPreferences: {
       preload: __dirname + "/preload.js",
-      webSecurity: false, // Disables CORS restrictions, similar to the extension's rule.json
+      webSecurity: true, // Re-enable webSecurity for Cloudflare Turnstile
       sandbox: false // Disable renderer sandbox to allow Turnstile iframe permissions
     }
+  });
+
+  // Intercept headers to bypass CORS for charts while keeping webSecurity enabled
+  session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
+    callback({
+      responseHeaders: {
+        ...details.responseHeaders,
+        'Access-Control-Allow-Origin': ['*'],
+        'Access-Control-Allow-Headers': ['*'],
+        'Access-Control-Allow-Methods': ['*']
+      }
+    });
   });
 
   mainWindow.webContents.userAgent = userAgent;
