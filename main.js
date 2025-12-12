@@ -3,6 +3,7 @@ const { autoUpdater } = require("electron-updater");
 const path = require("path");
 
 let mainWindow;
+const userAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36';
 
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -15,6 +16,8 @@ function createWindow() {
       webSecurity: false // Disables CORS restrictions, similar to the extension's rule.json
     }
   });
+
+  mainWindow.webContents.userAgent = userAgent;
 
   mainWindow.maximize();
   mainWindow.show();
