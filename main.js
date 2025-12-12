@@ -13,7 +13,8 @@ function createWindow() {
     icon: path.join(__dirname, "logo.png"),
     webPreferences: {
       preload: __dirname + "/preload.js",
-      webSecurity: false // Disables CORS restrictions, similar to the extension's rule.json
+      webSecurity: false, // Disables CORS restrictions, similar to the extension's rule.json
+      sandbox: false // Disable renderer sandbox to allow Turnstile iframe permissions
     }
   });
 
