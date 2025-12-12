@@ -20,12 +20,17 @@ function createWindow() {
 
   // Intercept headers to bypass CORS for charts while keeping webSecurity enabled
   session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
+    // Don't modify headers for Cloudflare or VATSIM auth domains
+    const url = details.url;
+    if (url.includes('cloudflare.com') || url.includes('vatsim.net')) {
+      callback({ responseHeaders: details.responseHeaders });
+      return;
+    }
+
     const responseHeaders = { ...details.responseHeaders };
 
-    // Replace CORS headers instead of adding to them to avoid duplicates
+    // Replace CORS headers for other requests (charts)
     responseHeaders['Access-Control-Allow-Origin'] = ['*'];
-    responseHeaders['Access-Control-Allow-Headers'] = ['*'];
-    responseHeaders['Access-Control-Allow-Methods'] = ['*'];
 
     callback({ responseHeaders });
   });
