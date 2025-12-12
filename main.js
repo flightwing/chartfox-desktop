@@ -20,14 +20,14 @@ function createWindow() {
 
   // Intercept headers to bypass CORS for charts while keeping webSecurity enabled
   session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
-    callback({
-      responseHeaders: {
-        ...details.responseHeaders,
-        'Access-Control-Allow-Origin': ['*'],
-        'Access-Control-Allow-Headers': ['*'],
-        'Access-Control-Allow-Methods': ['*']
-      }
-    });
+    const responseHeaders = { ...details.responseHeaders };
+
+    // Replace CORS headers instead of adding to them to avoid duplicates
+    responseHeaders['Access-Control-Allow-Origin'] = ['*'];
+    responseHeaders['Access-Control-Allow-Headers'] = ['*'];
+    responseHeaders['Access-Control-Allow-Methods'] = ['*'];
+
+    callback({ responseHeaders });
   });
 
   mainWindow.webContents.userAgent = userAgent;
