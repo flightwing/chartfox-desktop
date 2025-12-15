@@ -31,7 +31,7 @@ function createWindow() {
           delete responseHeaders[key];
         }
       });
-      
+
       // Set CORS headers to allow requests from chartfox origin
       responseHeaders['access-control-allow-origin'] = ['https://chartfox.org'];
       responseHeaders['access-control-allow-credentials'] = ['true'];
@@ -43,11 +43,11 @@ function createWindow() {
 
     callback({ responseHeaders });
   });
-  
+
   // Intercept requests to add necessary headers for Cloudflare
   session.defaultSession.webRequest.onBeforeSendHeaders((details, callback) => {
     let requestHeaders = { ...details.requestHeaders };
-    
+
     // Ensure proper headers for Cloudflare challenge
     requestHeaders['User-Agent'] = userAgent;
     requestHeaders['Accept-Language'] = 'en-US,en;q=0.9';
@@ -58,7 +58,7 @@ function createWindow() {
     requestHeaders['Sec-Fetch-Mode'] = 'navigate';
     requestHeaders['Sec-Fetch-Site'] = 'none';
     requestHeaders['Upgrade-Insecure-Requests'] = '1';
-    
+
     callback({ requestHeaders });
   });
 
@@ -99,8 +99,8 @@ function createMenu() {
             dialog.showMessageBox(mainWindow, {
               type: 'info',
               title: 'About ChartFox Desktop',
-              message: 'ChartFox Desktop v0.1.0',
-              detail: 'A lightweight, standalone desktop client for ChartFox – the free aeronautical chart aggregator for flight simulation.\n\nNot affiliated with ChartFox or Cobalt Grid.\n\nDeveloped by flightwing.',
+              message: 'ChartFox Desktop',
+              detail: 'A lightweight, standalone desktop client for ChartFox – the free aeronautical chart aggregator for flight simulation.\n\nNot affiliated with ChartFox or Cobalt Grid.\n\nDeveloped by flightwing.org.',
               buttons: ['OK'],
               icon: path.join(__dirname, "logo.png")
             });
