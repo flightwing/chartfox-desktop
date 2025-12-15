@@ -3,6 +3,22 @@ const { autoUpdater } = require("electron-updater");
 const path = require("path");
 const Store = require("electron-store");
 
+// Environment detection
+const isDev = process.env.NODE_ENV === 'development';
+
+// Enable hot reload in development mode
+if (isDev) {
+  try {
+    require('electron-reload')(__dirname, {
+      electron: path.join(__dirname, 'node_modules', '.bin', 'electron'),
+      hardResetMethod: 'exit'
+    });
+    console.log('[DEV] Hot reload enabled');
+  } catch (err) {
+    console.log('[DEV] electron-reload not found, hot reload disabled');
+  }
+}
+
 let mainWindow;
 const userAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36';
 const store = new Store.default();
@@ -89,6 +105,12 @@ function createWindow() {
   }
 
   mainWindow.show();
+
+  // Open DevTools automatically in development mode
+  if (isDev) {
+    mainWindow.webContents.openDevTools();
+    console.log('[DEV] DevTools opened automatically');
+  }
 
   // Save window bounds when resized or moved
   const saveWindowBounds = () => {

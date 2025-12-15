@@ -41,6 +41,7 @@
   },
   "scripts": {
     "start": "electron .",
+    "dev": "NODE_ENV=development electron .",
     "dist": "electron-builder"
   },
   "dependencies": {
@@ -49,6 +50,7 @@
   },
   "devDependencies": {
     "electron": "^39.2.6",
-    "electron-builder": "^26.0.12"
+    "electron-builder": "^26.0.12",
+    "electron-reload": "^2.0.0-alpha.1"
   }
 }
