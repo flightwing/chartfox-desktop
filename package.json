@@ -44,6 +44,7 @@
     "dist": "electron-builder"
   },
   "dependencies": {
+    "electron-store": "^11.0.2",
     "electron-updater": "^6.6.2"
   },
   "devDependencies": {

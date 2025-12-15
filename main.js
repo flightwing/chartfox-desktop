@@ -1,14 +1,21 @@
 const { app, BrowserWindow, Menu, shell, dialog, session } = require("electron");
 const { autoUpdater } = require("electron-updater");
 const path = require("path");
+const Store = require("electron-store");
 
 let mainWindow;
 const userAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36';
+const store = new Store.default();
 
 function createWindow() {
-  mainWindow = new BrowserWindow({
+  // Get saved window bounds or use defaults
+  const windowBounds = store.get("windowBounds", {
     width: 900,
-    height: 700,
+    height: 700
+  });
+
+  mainWindow = new BrowserWindow({
+    ...windowBounds,
     show: false,
     icon: path.join(__dirname, "logo.png"),
     webPreferences: {
@@ -72,8 +79,26 @@ function createWindow() {
   // Disable cache to ensure fresh Cloudflare challenges are fetched
   mainWindow.webContents.session.clearCache();
 
-  mainWindow.maximize();
+  // Check if this is the first launch
+  const isFirstLaunch = store.get("isFirstLaunch", true);
+
+  if (isFirstLaunch) {
+    // First launch: maximize the window
+    mainWindow.maximize();
+    store.set("isFirstLaunch", false);
+  }
+
   mainWindow.show();
+
+  // Save window bounds when resized or moved
+  const saveWindowBounds = () => {
+    if (!mainWindow.isMaximized() && !mainWindow.isMinimized() && !mainWindow.isFullScreen()) {
+      store.set("windowBounds", mainWindow.getBounds());
+    }
+  };
+
+  mainWindow.on("resize", saveWindowBounds);
+  mainWindow.on("move", saveWindowBounds);
 
   mainWindow.loadURL("https://chartfox.org/");
 }
