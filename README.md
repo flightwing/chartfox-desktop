@@ -89,6 +89,21 @@ npm install
 # Run locally
 npm start
 
+# Run the desktop UI smoke test
+npm run test:e2e
+
 # Build for distribution
 npm run dist
 ```
+
+`npm run test:e2e` launches a real Electron window in a temporary, isolated
+profile. It loads a local ChartFox-shaped fixture and verifies that a user can
+open the app and navigate to a chart page. It does not modify your signed-in
+ChartFox session, saved window state, or check for updates.
+
+Use `npm run test:e2e:live` when you also want to check the public ChartFox
+home page, its sign-in route, and the redirect to VATSIM. It stops before
+authentication and similarly uses an isolated profile. Cloudflare's bot
+verification itself cannot be completed by Playwright: the test browser is
+correctly identified as automated. Verify that final third-party challenge
+manually in a normal, non-automated app window.

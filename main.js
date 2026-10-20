@@ -5,6 +5,13 @@ const Store = require("electron-store");
 
 // Environment detection
 const isDev = process.env.NODE_ENV === 'development';
+// E2E mode is intentionally opt-in. It keeps automated checks isolated from
+// a user's profile and prevents update checks from ending a test run early.
+const isE2E = process.env.E2E_TEST === '1';
+
+if (process.env.E2E_USER_DATA_DIR) {
+  app.setPath('userData', process.env.E2E_USER_DATA_DIR);
+}
 
 // Enable hot reload in development mode
 if (isDev) {
@@ -20,7 +27,6 @@ if (isDev) {
 }
 
 let mainWindow;
-const userAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36';
 const store = new Store.default();
 
 function createWindow() {
@@ -67,26 +73,6 @@ function createWindow() {
     callback({ responseHeaders });
   });
 
-  // Intercept requests to add necessary headers for Cloudflare
-  session.defaultSession.webRequest.onBeforeSendHeaders((details, callback) => {
-    let requestHeaders = { ...details.requestHeaders };
-
-    // Ensure proper headers for Cloudflare challenge
-    requestHeaders['User-Agent'] = userAgent;
-    requestHeaders['Accept-Language'] = 'en-US,en;q=0.9';
-    requestHeaders['Accept'] = 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8';
-    requestHeaders['Accept-Encoding'] = 'gzip, deflate, br';
-    requestHeaders['Cache-Control'] = 'max-age=0';
-    requestHeaders['Sec-Fetch-Dest'] = 'document';
-    requestHeaders['Sec-Fetch-Mode'] = 'navigate';
-    requestHeaders['Sec-Fetch-Site'] = 'none';
-    requestHeaders['Upgrade-Insecure-Requests'] = '1';
-
-    callback({ requestHeaders });
-  });
-
-  mainWindow.webContents.userAgent = userAgent;
-
   // Enable persistent cookies for Cloudflare challenge
   session.defaultSession.cookies.on('changed', () => {
     // Cookies will be automatically persisted
@@ -122,7 +108,13 @@ function createWindow() {
   mainWindow.on("resize", saveWindowBounds);
   mainWindow.on("move", saveWindowBounds);
 
-  mainWindow.loadURL("https://chartfox.org/");
+  // The override is only accepted in the isolated E2E process. Production
+  // launches always open ChartFox.
+  const startUrl = isE2E && process.env.CHARTFOX_URL
+    ? process.env.CHARTFOX_URL
+    : "https://chartfox.org/";
+
+  mainWindow.loadURL(startUrl);
 }
 
 function createMenu() {
@@ -165,9 +157,13 @@ app.on("ready", () => {
   createMenu();
   createWindow();
 
-  autoUpdater.checkForUpdatesAndNotify();
+  if (!isDev && !isE2E) {
+    autoUpdater.checkForUpdatesAndNotify();
+  }
 });
 
 autoUpdater.on("update-downloaded", () => {
-  autoUpdater.quitAndInstall();
+  if (!isE2E) {
+    autoUpdater.quitAndInstall();
+  }
 });
