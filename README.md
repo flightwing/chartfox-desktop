@@ -47,6 +47,10 @@ While using the excellent ChartFox application, I found it inconvenient to acces
 *   **✈️ VATSIM Ready:** For flights currently on the VATSIM network, ChartFox provides charts for both departure and arrival airports in **82%** of cases.
 *   **🤝 Community Driven:** Not-for-profit and maintained by volunteer developers.
 
+## 🛩️ About FlightWing
+
+ChartFox Desktop is developed and maintained by [FlightWing](https://flightwing.org/), an independent open-source project building tools for the flight simulation community. You can find our other projects on [GitHub](https://github.com/flightwing).
+
 ---
 
 ## ⚠️ Disclaimer & Attribution
@@ -55,7 +59,7 @@ While using the excellent ChartFox application, I found it inconvenient to acces
 **Do not use this application or the ChartFox service for real-world navigation.** The data provided may be outdated, incomplete, or inaccurate.
 
 ### ⚖️ This Project
-This application is an open-source project developed by the community. **It is NOT associated with, endorsed by, or affiliated with the official ChartFox team or Cobalt Grid.**
+This application is an independent open-source project by FlightWing. **It is NOT associated with, endorsed by, or affiliated with the official ChartFox team or Cobalt Grid.**
 
 All rights to the ChartFox name, logo, and underlying service belong to their respective owners. This desktop application is simply a web-wrapper utility.
 
